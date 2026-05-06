@@ -1,26 +1,66 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Sidebar } from "@/components/dashboard/Sidebar";
+import { Topbar } from "@/components/dashboard/Topbar";
+import { UploadPanel } from "@/components/dashboard/UploadPanel";
+import { OutputPanel } from "@/components/dashboard/OutputPanel";
+import { ChatPanel } from "@/components/dashboard/ChatPanel";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  head: () => ({
+    meta: [
+      { title: "Inkwell AI — Digitize handwritten notes with AI" },
+      { name: "description", content: "Turn handwritten notes into clean, searchable digital documents. Chat with your notes powered by AI." },
+    ],
+  }),
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Index() {
+  const [isProcessing, setProcessing] = useState(false);
+  const [isDone, setDone] = useState(false);
+
+  const handleDigitize = () => {
+    setProcessing(true);
+    setDone(false);
+    setTimeout(() => {
+      setProcessing(false);
+      setDone(true);
+    }, 2200);
+  };
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="flex min-h-screen bg-background text-foreground">
+      <Sidebar />
+
+      <div className="flex-1 flex flex-col min-w-0">
+        <Topbar />
+
+        <main className="flex-1 p-4 lg:p-6">
+          <div className="mb-5 animate-fade-in-up">
+            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">
+              <span className="gradient-text-aurora">Digitize</span> your handwritten notes
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1.5">
+              Upload a page, get a polished digital document, and chat with it — all in seconds.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:h-[calc(100vh-220px)] min-h-[700px]">
+            <div className="lg:col-span-4 rounded-2xl glass p-5 flex flex-col animate-fade-in-up" style={{ animationDelay: "60ms" }}>
+              <UploadPanel onDigitize={handleDigitize} isProcessing={isProcessing} isDone={isDone} />
+            </div>
+
+            <div className="lg:col-span-5 rounded-2xl glass p-5 flex flex-col animate-fade-in-up" style={{ animationDelay: "120ms" }}>
+              <OutputPanel isProcessing={isProcessing} isDone={isDone} />
+            </div>
+
+            <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
+              <ChatPanel />
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
