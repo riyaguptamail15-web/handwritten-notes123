@@ -14,7 +14,7 @@ export function Topbar() {
         <div className="h-8 w-8 rounded-lg gradient-primary grid place-items-center">
           <Sparkles className="h-4 w-4 text-primary-foreground" />
         </div>
-        <span className="font-semibold text-sm">Inkwell AI</span>
+        <span className="font-semibold text-sm">Ink2Text</span>
       </div>
 
       <div className="flex-1 max-w-xl hidden md:block">

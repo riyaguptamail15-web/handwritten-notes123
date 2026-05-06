@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Inkwell AI — Digitize handwritten notes with AI" },
+      { title: "Ink2Text — Digitize handwritten notes with AI" },
       { name: "description", content: "Turn handwritten notes into clean, searchable digital documents. Chat with your notes powered by AI." },
     ],
   }),
