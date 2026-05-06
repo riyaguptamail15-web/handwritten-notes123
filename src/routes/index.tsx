@@ -46,16 +46,16 @@ function Index() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:h-[calc(100vh-220px)] min-h-[700px]">
-            <div className="lg:col-span-4 rounded-2xl glass p-5 flex flex-col animate-fade-in-up" style={{ animationDelay: "60ms" }}>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:h-[calc(100vh-220px)] min-h-[700px]">
+            <div className="md:col-span-4 rounded-2xl glass p-5 flex flex-col animate-fade-in-up min-w-0" style={{ animationDelay: "60ms" }}>
               <UploadPanel onDigitize={handleDigitize} isProcessing={isProcessing} isDone={isDone} />
             </div>
 
-            <div className="lg:col-span-5 rounded-2xl glass p-5 flex flex-col animate-fade-in-up" style={{ animationDelay: "120ms" }}>
+            <div className="md:col-span-5 rounded-2xl glass p-5 flex flex-col animate-fade-in-up min-w-0" style={{ animationDelay: "120ms" }}>
               <OutputPanel isProcessing={isProcessing} isDone={isDone} />
             </div>
 
-            <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: "180ms" }}>
+            <div className="md:col-span-3 animate-fade-in-up min-w-0" style={{ animationDelay: "180ms" }}>
               <ChatPanel />
             </div>
           </div>
