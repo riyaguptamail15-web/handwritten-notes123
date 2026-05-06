@@ -21,7 +21,7 @@ export function Sidebar() {
           <Sparkles className="h-4.5 w-4.5 text-primary-foreground" strokeWidth={2.5} />
         </div>
         <div className="flex flex-col leading-tight">
-          <span className="font-semibold text-sm tracking-tight">Inkwell AI</span>
+          <span className="font-semibold text-sm tracking-tight">Ink2Text</span>
           <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Notes Digitizer</span>
         </div>
       </div>

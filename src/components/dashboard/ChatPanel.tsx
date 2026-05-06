@@ -53,7 +53,7 @@ export function ChatPanel() {
           <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-surface" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold leading-tight">Ask Inkwell</p>
+          <p className="text-sm font-semibold leading-tight">Ask Ink2Text</p>
           <p className="text-[11px] text-muted-foreground">Chat with your notes · always online</p>
         </div>
         <span className="hidden sm:flex items-center gap-1 text-[11px] text-muted-foreground glass px-2 py-1 rounded-md">
