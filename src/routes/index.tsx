@@ -19,14 +19,33 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [isProcessing, setProcessing] = useState(false);
   const [isDone, setDone] = useState(false);
+  const [extractedText, setExtractedText] = useState("");
+  const [diagrams, setDiagrams] = useState<any[]>([]);
 
-  const handleDigitize = () => {
+  const handleDigitize = async (file: File) => {
     setProcessing(true);
     setDone(false);
-    setTimeout(() => {
-      setProcessing(false);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/extract-text", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      setExtractedText(data.text || "");
+      setDiagrams(data.diagrams || []);
       setDone(true);
-    }, 2200);
+    } catch (error) {
+      console.error("OCR error:", error);
+      alert("Failed to extract notes. Check backend server.");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -53,7 +72,12 @@ function Index() {
               </div>
 
               <div className="md:col-span-7 rounded-2xl glass p-5 flex flex-col animate-fade-in-up min-w-0" style={{ animationDelay: "120ms" }}>
-                <OutputPanel isProcessing={isProcessing} isDone={isDone} />
+                <OutputPanel
+                  isProcessing={isProcessing}
+                  isDone={isDone}
+                  extractedText={extractedText}
+                  diagrams={diagrams}
+                />
               </div>
             </div>
 

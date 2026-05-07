@@ -3,7 +3,7 @@ import { Upload, ImageIcon, X, Sparkles, FileImage, Loader2, CheckCircle2 } from
 import { cn } from "@/lib/utils";
 
 interface Props {
-  onDigitize: () => void;
+  onDigitize: (file: File) => void;
   isProcessing: boolean;
   isDone: boolean;
 }
@@ -12,10 +12,13 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
   const [dragOver, setDragOver] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback((file: File) => {
+    setSelectedFile(file);
     setFileName(file.name);
+
     const reader = new FileReader();
     reader.onload = (e) => setPreview(e.target?.result as string);
     reader.readAsDataURL(file);
@@ -24,6 +27,7 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
+
     const file = e.dataTransfer.files?.[0];
     if (file) handleFile(file);
   };
@@ -31,7 +35,18 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
   const clearFile = () => {
     setPreview(null);
     setFileName("");
+    setSelectedFile(null);
+
     if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const handleDigitizeClick = () => {
+    if (!selectedFile) {
+      alert("Please upload an image first");
+      return;
+    }
+
+    onDigitize(selectedFile);
   };
 
   return (
@@ -46,8 +61,12 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
           </h2>
           <p className="text-xs text-muted-foreground mt-1 ml-9">PNG, JPG, or PDF · up to 20 MB</p>
         </div>
+
         {preview && (
-          <button onClick={clearFile} className="text-xs text-muted-foreground hover:text-destructive transition-smooth flex items-center gap-1">
+          <button
+            onClick={clearFile}
+            className="text-xs text-muted-foreground hover:text-destructive transition-smooth flex items-center gap-1"
+          >
             <X className="h-3.5 w-3.5" /> Clear
           </button>
         )}
@@ -55,7 +74,10 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
 
       {!preview ? (
         <label
-          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragOver(true);
+          }}
           onDragLeave={() => setDragOver(false)}
           onDrop={onDrop}
           className={cn(
@@ -68,24 +90,30 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
           <input
             ref={inputRef}
             type="file"
-            accept="image/*,.pdf"
+            accept="image/*"
             className="hidden"
             onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
           />
 
-          {/* decorative blobs */}
           <div className="absolute -top-8 -left-8 h-32 w-32 rounded-full bg-primary/15 blur-3xl animate-blob" />
-          <div className="absolute -bottom-8 -right-8 h-32 w-32 rounded-full bg-accent/15 blur-3xl animate-blob" style={{ animationDelay: "3s" }} />
+          <div
+            className="absolute -bottom-8 -right-8 h-32 w-32 rounded-full bg-accent/15 blur-3xl animate-blob"
+            style={{ animationDelay: "3s" }}
+          />
 
-          <div className={cn(
-            "relative h-16 w-16 rounded-2xl gradient-primary grid place-items-center shadow-glow transition-bounce",
-            dragOver && "scale-110 rotate-3"
-          )}>
+          <div
+            className={cn(
+              "relative h-16 w-16 rounded-2xl gradient-primary grid place-items-center shadow-glow transition-bounce",
+              dragOver && "scale-110 rotate-3"
+            )}
+          >
             <FileImage className="h-7 w-7 text-primary-foreground" />
           </div>
+
           <p className="mt-5 font-semibold text-sm">
             {dragOver ? "Drop it here ✨" : "Drag & drop your handwritten note"}
           </p>
+
           <p className="text-xs text-muted-foreground mt-1.5">
             or <span className="text-primary font-medium underline-offset-2 group-hover:underline">browse files</span>
           </p>
@@ -93,18 +121,23 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
           <div className="mt-6 flex items-center gap-2 text-[11px] text-muted-foreground">
             <span className="px-2 py-1 rounded-md bg-muted/70 font-medium">JPG</span>
             <span className="px-2 py-1 rounded-md bg-muted/70 font-medium">PNG</span>
-            <span className="px-2 py-1 rounded-md bg-muted/70 font-medium">PDF</span>
-            <span className="px-2 py-1 rounded-md bg-muted/70 font-medium">HEIC</span>
+            <span className="px-2 py-1 rounded-md bg-muted/70 font-medium">JPEG</span>
           </div>
         </label>
       ) : (
         <div className="flex-1 flex flex-col gap-4 animate-scale-in min-h-0">
           <div className="relative rounded-2xl overflow-hidden border border-border shadow-soft bg-surface flex-1 min-h-0">
-            <img src={preview} alt="Preview" className="absolute inset-0 w-full h-full object-contain bg-muted/30" />
+            <img
+              src={preview}
+              alt="Preview"
+              className="absolute inset-0 w-full h-full object-contain bg-muted/30"
+            />
+
             <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
               <span className="glass px-2.5 py-1 rounded-md text-[11px] font-medium flex items-center gap-1.5">
                 <ImageIcon className="h-3 w-3" /> {fileName}
               </span>
+
               {isDone && (
                 <span className="glass px-2.5 py-1 rounded-md text-[11px] font-semibold text-success flex items-center gap-1.5">
                   <CheckCircle2 className="h-3 w-3" /> Digitized
@@ -115,7 +148,7 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
 
           <button
             disabled={isProcessing}
-            onClick={onDigitize}
+            onClick={handleDigitizeClick}
             className={cn(
               "relative h-12 w-full rounded-xl gradient-primary text-primary-foreground font-semibold text-sm shadow-glow overflow-hidden",
               "transition-bounce hover:scale-[1.02] active:scale-[0.98]",
