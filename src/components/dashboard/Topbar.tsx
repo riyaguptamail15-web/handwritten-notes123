@@ -44,10 +44,10 @@ export function Topbar() {
         </button>
         <div className="ml-2 flex items-center gap-2 pl-2 border-l border-border/60">
           <div className="h-9 w-9 rounded-full gradient-aurora grid place-items-center text-primary-foreground text-xs font-semibold shadow-soft">
-            AS
+            RG
           </div>
           <div className="hidden sm:flex flex-col leading-tight">
-            <span className="text-xs font-semibold">Alex Stone</span>
+            <span className="text-xs font-semibold">Riya Gupta</span>
             <span className="text-[10px] text-muted-foreground">Pro plan</span>
           </div>
         </div>
