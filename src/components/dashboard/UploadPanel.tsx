@@ -40,11 +40,11 @@ export function UploadPanel({ onDigitize, isProcessing, isDone }: Props) {
     if (inputRef.current) inputRef.current.value = "";
   };
 
-  const handleDigitizeClick = () => {
+  const handleDigitizeClick= async (file: File) => {
     if (!selectedFile) {
       alert("Please upload an image first");
       return;
-    }
+    } 
 
     onDigitize(selectedFile);
   };

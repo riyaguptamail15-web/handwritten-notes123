@@ -26,6 +26,33 @@ app.add_middleware(
 # OCR model
 reader = easyocr.Reader(['en'], gpu=False)
 
+def clean_ocr_text(text):
+    junk_words = [
+        "page view",
+        "read aloud",
+        "draw",
+        "jocudocun",
+        "document",
+        "browser",
+        "toolbar"
+    ]
+
+    lines = text.split("\n")
+    cleaned = []
+
+    for line in lines:
+        line = line.strip()
+
+        if len(line) < 3:
+            continue
+
+        if any(junk in line.lower() for junk in junk_words):
+            continue
+
+        cleaned.append(line)
+
+    return "\n".join(cleaned)
+
 @app.post("/extract-text")
 async def extract_text(file: UploadFile = File(...)):
     contents = await file.read()
@@ -35,7 +62,8 @@ async def extract_text(file: UploadFile = File(...)):
 
     # OCR text extraction
     result = reader.readtext(image_np, detail=0, paragraph=True)
-    extracted_text = "\n".join(result)
+    raw_text = "\n".join(result)
+    extracted_text = clean_ocr_text(raw_text)   
 
     # Convert image for OpenCV
     cv_image = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
@@ -59,7 +87,18 @@ async def extract_text(file: UploadFile = File(...)):
         area = w * h
 
         # This filters bigger objects like diagrams/images
-        if area > 10000 and w > 80 and h > 80:
+        aspect_ratio = w / h
+
+        # likely actual diagram/image region
+        if (
+             area > 15000 and
+              w > 120 and
+              h > 120 and
+              0.5 < aspect_ratio < 2.5 and
+              w < cv_image.shape[1] * 0.8 and
+              h < cv_image.shape[0] * 0.8
+            ):
+
             crop = cv_image[y:y+h, x:x+w]
 
             _, buffer = cv2.imencode(".png", crop)
