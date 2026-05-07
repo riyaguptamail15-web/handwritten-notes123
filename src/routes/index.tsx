@@ -46,16 +46,18 @@ function Index() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:h-[calc(100vh-220px)] min-h-[700px]">
-            <div className="md:col-span-4 rounded-2xl glass p-5 flex flex-col animate-fade-in-up min-w-0" style={{ animationDelay: "60ms" }}>
-              <UploadPanel onDigitize={handleDigitize} isProcessing={isProcessing} isDone={isDone} />
+          <div className="flex flex-col gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-5 min-h-[600px]">
+              <div className="md:col-span-5 rounded-2xl glass p-5 flex flex-col animate-fade-in-up min-w-0" style={{ animationDelay: "60ms" }}>
+                <UploadPanel onDigitize={handleDigitize} isProcessing={isProcessing} isDone={isDone} />
+              </div>
+
+              <div className="md:col-span-7 rounded-2xl glass p-5 flex flex-col animate-fade-in-up min-w-0" style={{ animationDelay: "120ms" }}>
+                <OutputPanel isProcessing={isProcessing} isDone={isDone} />
+              </div>
             </div>
 
-            <div className="md:col-span-5 rounded-2xl glass p-5 flex flex-col animate-fade-in-up min-w-0" style={{ animationDelay: "120ms" }}>
-              <OutputPanel isProcessing={isProcessing} isDone={isDone} />
-            </div>
-
-            <div className="md:col-span-3 animate-fade-in-up min-w-0" style={{ animationDelay: "180ms" }}>
+            <div className="animate-fade-in-up min-w-0 h-[600px]" style={{ animationDelay: "180ms" }}>
               <ChatPanel />
             </div>
           </div>
